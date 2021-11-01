@@ -1,10 +1,16 @@
 # docker backup
 
 ## Description
-
 Backup of all your running containers dynamically.
 
 This will create a backup of docker images & volumes, and store them on the local filesystem.
+
+### Changes
+This is a fork of /piscue/docker-backup-scripts, with the following changes:
+* Unified into a single bash script
+* Tidier output
+* Removal of dropbox (local storage only)
+* Removed CoreOS support
 
 ## Setup and Usage
 
