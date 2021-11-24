@@ -6,11 +6,15 @@
 #   - Removed CoreOS support
 #   - Unified into a single bash script
 #   - Tidier output
+# modified by flomine
+# modifications:
+#   - add config file
 
 # Setting variables
-backup_path="/root/backup/docker/"
-tar_opts="--exclude='/var/run/*'"
+. `dirname $0`/inc-cfg.bash || exit 1
 
+
+DATE=`date +%Y-%m-%d` 
 # Create destination path
 mkdir -p $backup_path
 
@@ -25,14 +29,18 @@ for i in `docker inspect --format='{{.Name}}' $(docker ps -q) | cut -f2 -d\/`
         echo -n "$container_name - "
         container_image=`docker inspect --format='{{.Config.Image}}' $container_name`
         mkdir -p $backup_path/$container_name
-        save_file="$backup_path/$container_name/$container_name-image.tar"
-        docker save -o $save_file $container_image
+	#save_file="$backup_path/$container_name/${DATE}_$container_name-image.tar"
+	save_file="$backup_path/$container_name/$container_name-image.tar"
+	docker save -o $save_file $container_image
         echo "OK"
 done
+
+
 
 #
 # Backup volumes
 # 
+
 echo -e "Backing up volumes.. \n"
 
 for i in `docker inspect --format='{{.Name}}' $(docker ps -q) | cut -f2 -d\/`
@@ -40,10 +48,11 @@ for i in `docker inspect --format='{{.Name}}' $(docker ps -q) | cut -f2 -d\/`
         mkdir -p $backup_path/$container_name
         echo -n "$container_name - "
 	docker run --rm \
-  	--volumes-from $container_name \
-  	-v $backup_path:/backup \
+	--volumes-from $container_name \
+  	-v ${backup_path}:/backup \
   	-e TAR_OPTS="$tar_opts" \
-  	piscue/docker-backup \
-        backup "$container_name/$container_name-volume.tar.xz"
+        flomine/docker-backup \
+	#backup "$container_name/${DATE}_$container_name-volume.tar.xz"
+	backup "$container_name/$container_name-volume.tar.xz"
 	echo "OK"
 done
