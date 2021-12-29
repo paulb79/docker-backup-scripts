@@ -24,7 +24,7 @@ mkdir -p $backup_path
 echo -e "Starting docker backup.. \n"
 echo -e "Backing up images.. \n"
 
-for i in `docker inspect --format='{{.Name}}' $(docker ps -q) | cut -f2 -d\/`
+for i in `docker inspect --format='{{.Name}}' $(docker ps -aq) | cut -f2 -d\/`
         do container_name=$i
         echo -n "$container_name - "
         container_image=`docker inspect --format='{{.Config.Image}}' $container_name`
@@ -43,7 +43,7 @@ done
 
 echo -e "Backing up volumes.. \n"
 
-for i in `docker inspect --format='{{.Name}}' $(docker ps -q) | cut -f2 -d\/`
+for i in `docker inspect --format='{{.Name}}' $(docker ps -aq) | cut -f2 -d\/`
         do container_name=$i
         mkdir -p $backup_path/$container_name
         echo -n "$container_name - "

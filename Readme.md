@@ -11,6 +11,7 @@ This is a fork of /piscue/docker-backup-scripts, with the following changes:
 * Tidier output
 * Removal of dropbox (local storage only)
 * Removed CoreOS support
+* Add -all flag to ensure all images and volumes are backed up
 
 ## Setup and Usage
 
